@@ -7,90 +7,91 @@ import 'package:template_flutter/widgets/hero_widget.dart';
 import 'package:template_flutter/widgets/inprogress_widget.dart';
 import 'package:template_flutter/widgets/more_widget.dart';
 import 'package:template_flutter/widgets/nearby_widget.dart';
+import 'package:template_flutter/widgets/sign_up.dart';
 
-class DiscoverPage extends StatelessWidget {
+class DiscoverPage extends StatefulWidget {
   const DiscoverPage({super.key});
+
+  @override
+  _DiscoverPageState createState() => _DiscoverPageState();
+}
+
+class _DiscoverPageState extends State<DiscoverPage> {
+  int _selectedIndex = 0;
+
+  final List<Widget> _pages = [
+    DiscoverContent(),
+    SignUpScreen(),
+    // WalletPage(),
+    // SettingsPage(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFBFBFBFB),
-      bottomNavigationBar: bottomNavigationBar(),
-      body: const SingleChildScrollView(
-        child: Column(
-          children: [
-            HeroWidget(),
-            SizedBox(
-              height: 20,
-            ),
-            InprogressWidget(),
-            SizedBox(
-              height: 20,
-            ),
-            NearbyWidget(),
-            SizedBox(
-              height: 20,
-            ),
-            CategoriesWidget(),
-            SizedBox(
-              height: 20,
-            ),
-            MoreWidget()
-          ],
-        ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.white,
+        selectedItemColor: Colors.blue, // Ganti dengan warna yang sesuai
+        unselectedItemColor: Colors.grey, // Ganti dengan warna yang sesuai
+        showUnselectedLabels: true,
+        selectedLabelStyle: GoogleFonts.plusJakartaSans(
+            fontSize: 12, fontWeight: FontWeight.bold),
+        unselectedLabelStyle: GoogleFonts.plusJakartaSans(
+            fontSize: 12, fontWeight: FontWeight.w500),
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        items: [
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset('assets/svgs/discover.svg'),
+            label: "Discover",
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset('assets/svgs/orders.svg'),
+            label: "Register",
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset('assets/svgs/wallet.svg'),
+            label: "Wallet",
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset('assets/svgs/setting.svg'),
+            label: "Setting",
+          ),
+        ],
+      ),
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _pages,
       ),
     );
   }
+}
 
-  BottomNavigationBar bottomNavigationBar() {
-    return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      backgroundColor: CssPublic.colorWhite,
-      selectedItemColor: CssPublic.colorPrimary,
-      unselectedItemColor: CssPublic.colorGray,
-      showUnselectedLabels: true,
-      selectedLabelStyle: GoogleFonts.plusJakartaSans(
-          fontSize: 12, fontWeight: FontWeight.bold),
-      unselectedLabelStyle: GoogleFonts.plusJakartaSans(
-          fontSize: 12, fontWeight: FontWeight.w500),
-      items: [
-        BottomNavigationBarItem(
-          icon: SvgPicture.asset('assets/svgs/discover.svg'),
-          label: "Discover",
-        ),
-        BottomNavigationBarItem(
-          icon: SvgPicture.asset('assets/svgs/orders.svg'),
-          label: "Orders",
-        ),
-        BottomNavigationBarItem(
-          icon: SvgPicture.asset('assets/svgs/wallet.svg'),
-          label: "Wallet",
-        ),
-        BottomNavigationBarItem(
-          icon: SvgPicture.asset('assets/svgs/setting.svg'),
-          label: "Setting",
-        ),
-      ],
+class DiscoverContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          HeroWidget(),
+          SizedBox(height: 20),
+          InprogressWidget(),
+          SizedBox(height: 20),
+          NearbyWidget(),
+          SizedBox(height: 20),
+          CategoriesWidget(),
+          SizedBox(height: 20),
+          MoreWidget(),
+        ],
+      ),
     );
-  }
-
-  BottomNavigationBarItem bottomNavigationBarItem({
-    required String label,
-    required String icon,
-
-    // required bool active,
-  }) {
-    return BottomNavigationBarItem(
-        icon: SvgPicture.asset(
-          icon,
-          colorFilter:
-              const ColorFilter.mode(CssPublic.colorGray, BlendMode.srcIn),
-        ),
-        activeIcon: SvgPicture.asset(
-          icon,
-          colorFilter:
-              const ColorFilter.mode(CssPublic.colorPrimary, BlendMode.srcIn),
-        ),
-        label: label);
   }
 }
